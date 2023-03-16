@@ -4,14 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "*"
-flask-graphql = "*"
-graphene-mongo = "*"
-flask-cors = "*"
-autopep8 = "*"
+django = "*"
+django-elasticsearch-dsl = "*"
+django-debug-toolbar = "*"
 
 [dev-packages]
-autopep8 = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.10"
+python_full_version = "3.10.9"
