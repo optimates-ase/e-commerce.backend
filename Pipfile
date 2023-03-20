@@ -7,6 +7,10 @@ name = "pypi"
 django = "*"
 django-elasticsearch-dsl = "*"
 django-debug-toolbar = "*"
+python-dotenv = "*"
+django-extensions = "*"
+django-filter = "*"
+djangorestframework = "*"
 
 [dev-packages]
 
