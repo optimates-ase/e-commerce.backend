@@ -11,6 +11,9 @@ python-dotenv = "*"
 django-extensions = "*"
 django-filter = "*"
 djangorestframework = "*"
+pytest = "*"
+pytest-django = "*"
+mixer = "*"
 
 [dev-packages]
 
