@@ -9,8 +9,9 @@ pipenv install
 ```
 
 ## activiate virtual environment
+```
 pipenv shell
-
+```
 ## run server
 ```
 python manage.py runserver
