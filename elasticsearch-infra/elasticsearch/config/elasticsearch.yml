@@ -1,6 +1,0 @@
-#luster.name: "docker-cluster"
-network.host: 0.0.0.0
-
-
-#path.repo: ["home/borady/Documents/backups"]
-

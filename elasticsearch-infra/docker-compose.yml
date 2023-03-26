@@ -1,38 +1,26 @@
-version: '3'
+version: "3.0"
 services:
-
-  infra-elasticsearch:
-    container_name: elasticsearch
-    image: elasticsearch:6.6.0
-    volumes:
-      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - elasticsearch_data:/usr/share/elasticsearch/data
+  elasticsearch:
+    container_name: es-container
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+    networks:
+      - es-net
     ports:
       - 9200:9200
-      - 9300:9300
+  kibana:
+    container_name: kb-container
+    image: docker.elastic.co/kibana/kibana:7.11.0
     environment:
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-
-  infra-kibana:
-    container_name: kibana
-    image: kibana:6.6.0
+      - ELASTICSEARCH_HOSTS=http://es-container:9200
+    networks:
+      - es-net
+    depends_on:
+      - elasticsearch
     ports:
       - 5601:5601
-    environment:
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    depends_on:
-      - infra-elasticsearch
-
-    volumes:
-      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
-
-
-volumes:
-  elasticsearch_data:
+networks:
+  es-net:
+    driver: bridge
