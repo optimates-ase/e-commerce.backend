@@ -4,16 +4,12 @@ jobs:
   test-api:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.11.2"
       - uses: actions/checkout@v2
-      - name: Install dependencies
-        uses: VaultVulp/action-pipenv@v2.0.1
+      - name: Setup Python 3.11.2
+        uses: actions/setup-python@v1
         with:
-          command: run pipenv install -d # Install all dependencies, including development ones
-      - name: Test
-        uses: VaultVulp/action-pipenv@v2.0.1
-        with:
-          command: run pytest . # Run custom `test` command defined in the `[scripts]` block of Pipfile
+          python-version: 3.11.2
+      - name: Install Pipenv
+        run: pip install pipenv
+      - name: Run Tests
+        run: pytest .
