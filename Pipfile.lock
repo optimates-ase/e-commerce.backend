@@ -1,11 +1,7 @@
 {
     "_meta": {
         "hash": {
-<<<<<<< Updated upstream
             "sha256": "a40dadfc83de8831d7ae8a2438306eb103110cb93921b514bd5843d523e180a9"
-=======
-            "sha256": "10b3e56bc9843a34beb836cdd832b76c4648188d2b8777fa52e214c4f946bcc2"
->>>>>>> Stashed changes
         },
         "pipfile-spec": 6,
         "requires": {
@@ -229,26 +225,11 @@
         },
         "django": {
             "hashes": [
-<<<<<<< Updated upstream
                 "sha256:43253f4b4a2c3a1694cd52d3517847271934c84dbd060ca0e82a9f90e569dab3",
                 "sha256:dba9dd0bf8b748aa9c98d6c679f8b1c0bfa43124844bea9425ad9ba0cd5e65c3"
             ],
             "index": "pypi",
             "version": "==4.1.8"
-=======
-                "sha256:ad33ed68db9398f5dfb33282704925bce044bef4261cd4fb59e4e7f9ae505a78",
-                "sha256:c36e2ab12824e2ac36afa8b2515a70c53c7742f0d6eaefa7311ec379558db997"
-            ],
-            "index": "pypi",
-            "version": "==4.2"
-        },
-        "django-allauth": {
-            "hashes": [
-                "sha256:120e265f802b65738899c6cb627b827fde46a4d03067034c633f516c2adf3e3e"
-            ],
-            "index": "pypi",
-            "version": "==0.54.0"
->>>>>>> Stashed changes
         },
         "django-debug-toolbar": {
             "hashes": [
@@ -322,7 +303,6 @@
             "markers": "python_version >= '3.6'",
             "version": "==12.0.1"
         },
-<<<<<<< Updated upstream
         "inflection": {
             "hashes": [
                 "sha256:1a29730d366e996aaacffb2f1f1cb9593dc38e2ddd30c91250c6dde09ea9b417",
@@ -330,15 +310,6 @@
             ],
             "markers": "python_version >= '3.5'",
             "version": "==0.5.1"
-=======
-        "idna": {
-            "hashes": [
-                "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4",
-                "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"
-            ],
-            "markers": "python_version >= '3.5'",
-            "version": "==3.4"
->>>>>>> Stashed changes
         },
         "iniconfig": {
             "hashes": [
@@ -441,29 +412,8 @@
             "hashes": [
                 "sha256:1d8ce29db189191fb55338ee6d0387d82ab59f3d00eac103412d64e0ebd0c588",
                 "sha256:a151b3abb88eda1d4e34a9814df37de2a80e301e68ba0fd856fb9b46bfbbbffb"
-<<<<<<< Updated upstream
             ],
             "version": "==2023.3"
-=======
-            ],
-            "version": "==2023.3"
-        },
-        "requests": {
-            "hashes": [
-                "sha256:64299f4909223da747622c030b781c0d7811e359c37124b4bd368fb8c6518baa",
-                "sha256:98b1b2782e3c6c4904938b84c0eb932721069dfdb9134313beff7c83c2df24bf"
-            ],
-            "markers": "python_version >= '3.7' and python_version < '4'",
-            "version": "==2.28.2"
-        },
-        "requests-oauthlib": {
-            "hashes": [
-                "sha256:2577c501a2fb8d05a304c09d090d6e47c306fef15809d102b327cf8364bddab5",
-                "sha256:75beac4a47881eeb94d5ea5d6ad31ef88856affe2332b9aafb52c6452ccf0d7a"
-            ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-            "version": "==1.3.1"
->>>>>>> Stashed changes
         },
         "six": {
             "hashes": [
