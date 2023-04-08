@@ -1,4 +1,4 @@
-##install pipenv:
+## install pipenv:
 ```
 pip install --user pipenv
 ```
@@ -9,25 +9,26 @@ pipenv install
 ```
 
 ## activiate virtual environment
+```
 pipenv shell
-
+```
 ## run server
 ```
 python manage.py runserver
 ```
 
 
-##run app
+## run app
 ```
 python manage.py startapp <app>
 ```
 
-##run tests
+## run tests
 ```
 python manage.py test
 ```
 
-##test app
+## test app
 ```
 python manage.py test <app>
 ```
