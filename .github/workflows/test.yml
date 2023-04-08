@@ -12,4 +12,4 @@ jobs:
       - name: Install Pipenv
         run: pip install pipenv
       - name: Run Tests
-        run: pytest .
+        run: pipenv run pytest
