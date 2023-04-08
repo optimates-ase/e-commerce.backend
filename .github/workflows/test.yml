@@ -5,10 +5,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+       # Setup Python (faster than using Python container)
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.11.2"
       - name: Install dependencies
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
-          command: run pipenv-3.11.2 install -d # Install all dependencies, including development ones
+          command: run pipenv install -d # Install all dependencies, including development ones
       - name: Test
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
