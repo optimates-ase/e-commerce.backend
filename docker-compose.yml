@@ -1,0 +1,14 @@
+services:
+  api:
+    build:
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    command: python manage.py runserver 0.0.0.0:8000
+    # TODO remove volumes, as it does not honor .dockerignore.
+    # simplifies development
+    volumes:
+      - ./:/code
+    ports: 
+      - 8000:8000
+    env_file:
+      - .env
