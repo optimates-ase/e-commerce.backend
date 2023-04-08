@@ -11,5 +11,7 @@ jobs:
           python-version: 3.11.2
       - name: Install Pipenv
         run: pip install pipenv
+      - name: Install dependencies
+        run: pipenv install -d
       - name: Run Tests
         run: pipenv run pytest
