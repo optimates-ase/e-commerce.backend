@@ -15,15 +15,18 @@ Including another URLconf
 """
 import debug_toolbar
 from django.contrib import admin
-from django.urls import path, include
-from django.urls import path
-from django.contrib import admin
-# from rest_framework import routers
+from django.urls import include, path
+from rest_framework import routers
 
+from tours import views as tour_views
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('store/', include("store.urls")),
-    path('__debug__/', include('debug_toolbar.urls')),
+router = routers.DefaultRouter()
+
+urlpatterns = router.urls
+
+urlpatterns += [
+    # path('admin/', admin.site.urls),
+    # path("store/", include("store.urls")),
+    path("contact/", tour_views.ContactAPIView.as_view())
+    # path('__debug__/', include('debug_toolbar.urls')),
 ]
-  

@@ -10,12 +10,17 @@ django-debug-toolbar = "*"
 python-dotenv = "*"
 django-extensions = "*"
 django-filter = "*"
-djangorestframework = "*"
 pytest = "*"
 pytest-django = "*"
 mixer = "*"
+djangorestframework-jsonapi = "*"
 
 [dev-packages]
+black = "*"
+isort = "*"
+flake8 = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.11"
