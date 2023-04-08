@@ -3,15 +3,15 @@
 pip install --user pipenv
 ```
 
-##install dependencies
+## install dependencies
 ```
 pipenv install
 ```
 
-##activiate virtual environment
+## activiate virtual environment
 pipenv shell
 
-##run server
+## run server
 ```
 python manage.py runserver
 ```
