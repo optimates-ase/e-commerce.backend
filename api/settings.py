@@ -44,9 +44,9 @@ INSTALLED_APPS = [
     'django_filters', #Used with DRF
     'rest_framework', #DRF package
     # 'core', # New app
-    'store',
     'debug_toolbar',
     'districts',
+    'tours'
 ]
 
 SITE_ID = 1
