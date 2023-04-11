@@ -18,7 +18,8 @@ SECRET_KEY = 'django-insecure-zho+06$szy^si@bid!glx$vx&yk@l)o6hze5f%dz#(z7p-*w&q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# For dockerization
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -29,12 +30,14 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sessions',
     'django_extensions', #Great packaged to access abstract models
     'django_filters', #Used with DRF
     'rest_framework', #DRF package
     # 'core', # New app
     'store',
     'debug_toolbar',
+    'districts',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +88,12 @@ DATABASES = {
     }
 }
 
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200',
+        'timeout': 30,
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

@@ -24,6 +24,7 @@ from django.contrib import admin
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('store/', include("store.urls")),
+    path('districts/', include("districts.urls")),
     path('__debug__/', include('debug_toolbar.urls')),
 ]
   
