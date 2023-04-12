@@ -10,6 +10,9 @@ services:
       - es-net
     ports:
       - 9200:9200
+    mem_limit: 2048m
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
   kibana:
     container_name: kb-container
     image: docker.elastic.co/kibana/kibana:7.11.0
@@ -21,6 +24,19 @@ services:
       - elasticsearch
     ports:
       - 5601:5601
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
 networks:
   es-net:
     driver: bridge
+
+volumes:
+  elasticsearch_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./elasticsearch/data/
+      o: bind
