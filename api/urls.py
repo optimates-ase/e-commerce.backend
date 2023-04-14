@@ -29,5 +29,6 @@ urlpatterns = [
     # path("store/", include("store.urls")),
     path("contact/", tour_views.ContactAPIView.as_view()),
     path('districts/', include("districts.urls")),
+    path('geos/', include("geos.urls")),
     # path('__debug__/', include('debug_toolbar.urls')),
 ]

@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     # 'core', # New app
     'debug_toolbar',
     'districts',
-    'tours'
+    'tours',
+    'geos'
 ]
 
 SITE_ID = 1
