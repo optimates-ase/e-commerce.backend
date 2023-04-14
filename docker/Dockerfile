@@ -7,8 +7,9 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONFAULTHANDLER 1
 
 RUN mkdir /code
-COPY . /code/
 WORKDIR /code
+ADD . .
+
 
 RUN set -e; \
     /usr/local/bin/python -m pip install --upgrade pip ;\
@@ -18,3 +19,4 @@ RUN set -e; \
 # Run the application
 EXPOSE 8000
 ENTRYPOINT ["/code/docker/entrypoints/entrypoint.sh"]
+
