@@ -12,3 +12,10 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Contact
         fields = ("name", "email", "message")
+
+
+class TourSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Tour
+        fields = ['id', 'name', 'description', 'price', 'date',
+                  'min_of_participants', 'rating', 'num_of_ratings']

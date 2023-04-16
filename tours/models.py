@@ -19,3 +19,12 @@ class Contact(TimeStampedModel, ActivatorModel, TitleDescriptionModel, Model):
 
 
 # Create your models here.
+class Tour(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateField()
+    min_of_participants = models.PositiveIntegerField()
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
+    num_of_ratings = models.PositiveIntegerField(default=0)

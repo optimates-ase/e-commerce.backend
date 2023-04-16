@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,7 +14,6 @@ try:
     ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 except AttributeError:
     ALLOWED_HOSTS = []
-    
 
 
 # Quick-start development settings - unsuitable for production
@@ -40,9 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sessions',
-    'django_extensions', #Great packaged to access abstract models
-    'django_filters', #Used with DRF
-    'rest_framework', #DRF package
+    'django_extensions',  # Great packaged to access abstract models
+    'django_filters',  # Used with DRF
+    'rest_framework',  # DRF package
     # 'core', # New app
     'debug_toolbar',
     'districts',
