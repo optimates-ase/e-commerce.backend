@@ -14,8 +14,7 @@ class DistrictCreateView(APIView):
             district = serializer.save()
 
             # Store the district in Elasticsearch
-            es.index(index='districts', id=district.id, body={
-                'id': district.id,
+            es.index(index='districts', body={
                 'name': district.name,
                 'description': district.description
             })
