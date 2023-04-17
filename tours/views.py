@@ -7,7 +7,6 @@ from rest_framework import status, views
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from random import shuffle
 from .models import Tour
 from .serializers import TourSerializer, ContactSerializer
 from elasticsearch import Elasticsearch
@@ -72,72 +71,61 @@ class RandomToursPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
 
 
+es = Elasticsearch(['http://localhost:9200'])
+
+
 class TourAPIView(APIView):
-    """
-    A simple APIView for creating, updating, and deleting tours.
-    """
 
     def post(self, request, format=None):
-
         serializer = TourSerializer(data=request.data)
+        my_data = request.data
         if serializer.is_valid():
-            tour = serializer.save()
 
             # Store the tour in Elasticsearch
-            es.index(index='tours', body={
-                'name': tour.name,
-                'description': tour.description,
-                'price': tour.price,
-                'date': tour.date,
-                'min_of_participants': tour.min_of_participants,
-                'rating': tour.rating,
-                'num_of_ratings': tour.num_of_ratings,
+            tour_es = es.index(index='tours', body={
+                'name': my_data['name'],
+                'description': my_data['description'],
+                'price': my_data['price'],
+                'date': my_data['date'],
+                'min_of_participants': my_data['min_of_participants'],
+                'rating': my_data['rating'],
+                'num_of_ratings': my_data['num_of_ratings'],
             })
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(tour_es, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request, pk=None, format=None):
-        # Get a single tour from Elasticsearch
-        tour = es.get(index='tours', id=pk)
+    def get(self, request, format=None):
+        tour_id = request.query_params.get('id', None)
+        tour = es.get(index='tours', id=tour_id)
 
-        # Return the serialized tour data
         serializer = TourSerializer(data=tour['_source'])
         if serializer.is_valid():
-            return Response(serializer.data)
+            return Response(tour, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, pk=None, format=None):
-        # Retrieve the tour from Elasticsearch
-        tour = es.get(index='tours', id=pk)
+    def put(self, request, format=None):
+        tour_id = request.query_params.get('id', None)
+        tour = es.get(index='tours', id=tour_id)
 
-        # Update the tour object with the new data
-        serializer = TourSerializer(instance=tour['_source'], data=request.data)
-        if serializer.is_valid():
-            tour = serializer.save()
+        my_data = request.data
+
+        if my_data is not None:
 
             # Update the tour in Elasticsearch
-            es.index(index='tours', id=pk, body={
-                'id': tour.id,
-                'name': tour.name,
-                'description': tour.description,
-                'price': tour.price,
-                'date': tour.date,
-                'min_of_participants': tour.min_of_participants,
-                'rating': tour.rating,
-                'num_of_ratings': tour.num_of_ratings,
+            tour_es = es.index(index='tours', id=tour_id, body={
+                'name': my_data['name'],
+                'description': my_data['description'],
+                'price': my_data['price'],
+                'date': my_data['date'],
+                'min_of_participants': my_data['min_of_participants'],
+                'rating': my_data['rating'],
+                'num_of_ratings': my_data['num_of_ratings'],
             })
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(tour_es, status=status.HTTP_201_CREATED)
+        return Response(f"bad request: {tour_es}", status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk=None, format=None):
-        # Delete the tour from Elasticsearch
-        es.delete(index='tours', id=pk)
-
-        # Delete the tour object from the database
-        try:
-            tour = Tour.objects.get(pk=pk)
-            tour.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Tour.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    def delete(self, request, format=None):
+        tour_id = request.query_params.get('id', None)
+        response = es.delete(index='tours', id=tour_id)
+        return Response(response, status=status.HTTP_204_NO_CONTENT)

@@ -25,7 +25,7 @@ python manage.py runserver
 ## run docker (in elasticsearch-infra folder)
 
 ```
-run docker compose
+docker-compose -f docker-compose.yml up
 ```
 
 ## run app
