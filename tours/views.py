@@ -56,22 +56,36 @@ class ContactAPIView(views.APIView):
 
 
 class RandomToursAPIView(APIView):
+    def __init__(self):
+        self.displayed_tour_ids = set()
+
     def get(self, request, format=None):
-        # Get page number and items per page from query parameters
         page = request.query_params.get('page', 1)
         per_page = request.query_params.get('per_page', 10)
 
-        # Calculate start index and size for Elasticsearch query
         start_index = (int(page) - 1) * int(per_page)
         size = int(per_page)
 
-        # Define Elasticsearch query
         query = {
             "query": {
                 "function_score": {
                     "functions": [
                         {
                             "random_score": {}
+                        },
+                        {
+                            "filter": {
+                                "bool": {
+                                    "must_not": [
+                                        {
+                                            "ids": {
+                                                "values": list(self.displayed_tour_ids)
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "weight": 1000  # You can adjust the weight as needed
                         }
                     ]
                 }
@@ -80,7 +94,6 @@ class RandomToursAPIView(APIView):
             "size": size
         }
 
-        # Execute Elasticsearch query
         results = es.search(index='tours', body=query)
 
         # Extract tour data from Elasticsearch response
@@ -90,7 +103,9 @@ class RandomToursAPIView(APIView):
             tour_data['id'] = hit['_id']
             tours.append(tour_data)
 
-        # Return tours as JSON response
+            # Add displayed tour ID to set
+            self.displayed_tour_ids.add(hit['_id'])
+
         return JsonResponse({'tours': tours})
 
 
