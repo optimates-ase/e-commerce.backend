@@ -55,23 +55,43 @@ class ContactAPIView(views.APIView):
             )
 
 
-class RandomTourAPIView(APIView):
-    def list(self, request):
-        queryset = Tour.objects.all()
-        random_tours = sorted(queryset, key=lambda x: random.random())
-        paginator = RandomToursPagination()
-        result_page = paginator.paginate_queryset(random_tours, request)
-        serializer = TourSerializer(result_page, many=True)
-        return paginator.get_paginated_response(serializer.data)
+class RandomToursAPIView(APIView):
+    def get(self, request, format=None):
+        # Get page number and items per page from query parameters
+        page = request.query_params.get('page', 1)
+        per_page = request.query_params.get('per_page', 10)
 
+        # Calculate start index and size for Elasticsearch query
+        start_index = (int(page) - 1) * int(per_page)
+        size = int(per_page)
 
-class RandomToursPagination(PageNumberPagination):
-    page_size = 10
-    max_page_size = 100
-    page_size_query_param = 'page_size'
+        # Define Elasticsearch query
+        query = {
+            "query": {
+                "function_score": {
+                    "functions": [
+                        {
+                            "random_score": {}
+                        }
+                    ]
+                }
+            },
+            "from": start_index,
+            "size": size
+        }
 
+        # Execute Elasticsearch query
+        results = es.search(index='tours', body=query)
 
-es = Elasticsearch(['http://localhost:9200'])
+        # Extract tour data from Elasticsearch response
+        tours = []
+        for hit in results['hits']['hits']:
+            tour_data = hit['_source']
+            tour_data['id'] = hit['_id']
+            tours.append(tour_data)
+
+        # Return tours as JSON response
+        return JsonResponse({'tours': tours})
 
 
 class TourAPIView(APIView):
@@ -91,7 +111,6 @@ class TourAPIView(APIView):
                 'rating': my_data['rating'],
                 'num_of_ratings': my_data['num_of_ratings'],
             })
-
             return Response(tour_es, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
