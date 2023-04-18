@@ -4,12 +4,12 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 
-
 class ContactTestCase(APITestCase):
 
     """
     Test suite for Contact
     """
+
     def setUp(self):
         self.client = APIClient()
         self.data = {
@@ -37,7 +37,7 @@ class ContactTestCase(APITestCase):
         data.pop("name")
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-    
+
     def test_create_contact_when_name_equals_blank(self):
         '''
         test ContactViewSet create method when name is blank
@@ -55,7 +55,7 @@ class ContactTestCase(APITestCase):
         data.pop("message")
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-    
+
     def test_create_contact_when_message_equals_blank(self):
         '''
         test ContactViewSet create method when message is blank
@@ -73,7 +73,7 @@ class ContactTestCase(APITestCase):
         data.pop("email")
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-    
+
     def test_create_contact_when_email_equals_blank(self):
         '''
         test ContactViewSet create method when email is blank
