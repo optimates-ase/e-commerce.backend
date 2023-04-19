@@ -11,8 +11,6 @@ from .models import Tour
 from .serializers import TourSerializer, ContactSerializer
 from elasticsearch import Elasticsearch
 import random
-from rest_framework.pagination import PageNumberPagination
-
 
 es = Elasticsearch()
 
@@ -116,7 +114,6 @@ class TourAPIView(APIView):
         my_data = request.data
         if serializer.is_valid():
 
-            # Store the tour in Elasticsearch
             tour_es = es.index(index='tours', body={
                 'name': my_data['name'],
                 'description': my_data['description'],
@@ -125,6 +122,7 @@ class TourAPIView(APIView):
                 'min_of_participants': my_data['min_of_participants'],
                 'rating': my_data['rating'],
                 'num_of_ratings': my_data['num_of_ratings'],
+                'language_offered': my_data['language_offered'],
             })
             return Response(tour_es, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -140,13 +138,11 @@ class TourAPIView(APIView):
 
     def put(self, request, format=None):
         tour_id = request.query_params.get('id', None)
-        tour = es.get(index='tours', id=tour_id)
 
         my_data = request.data
 
         if my_data is not None:
 
-            # Update the tour in Elasticsearch
             tour_es = es.index(index='tours', id=tour_id, body={
                 'name': my_data['name'],
                 'description': my_data['description'],
@@ -155,6 +151,8 @@ class TourAPIView(APIView):
                 'min_of_participants': my_data['min_of_participants'],
                 'rating': my_data['rating'],
                 'num_of_ratings': my_data['num_of_ratings'],
+                'language_offered': my_data['language_offered'],
+
             })
             return Response(tour_es, status=status.HTTP_201_CREATED)
         return Response(f"bad request: {tour_es}", status=status.HTTP_400_BAD_REQUEST)

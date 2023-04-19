@@ -31,5 +31,7 @@ urlpatterns = [
     path('districts/', include("districts.urls")),
     path('tours/', include('tours.urls')),
     path('geos/', include("geos.urls")),
+    path('customers/', include("customers.urls")),
+    path('providers/', include("providers.urls")),
     # path('__debug__/', include('debug_toolbar.urls'))
 ]

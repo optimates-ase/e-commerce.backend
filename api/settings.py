@@ -45,8 +45,12 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'districts',
     'tours',
-    'geos'
+    'geos',
+    'customers',
+    'providers'
 ]
+
+APPEND_SLASH = False
 
 SITE_ID = 1
 
