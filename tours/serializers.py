@@ -18,5 +18,4 @@ class ContactSerializer(serializers.ModelSerializer):
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tour
-        fields = ('name', 'description', 'price', 'date',
-                  'min_of_participants', 'rating', 'num_of_ratings')
+        fields = '__all__'
