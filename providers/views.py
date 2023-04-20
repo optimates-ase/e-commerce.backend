@@ -11,8 +11,12 @@ class ProviderAPIView(APIView):
 
     def post(self, request, format=None):
         serializer = ProviderSerializer(data=request.data)
+
+        print(f"HELLO: {serializer}")
+
         my_data = request.data
-        if serializer.is_valid():
+        # if serializer.is_valid():
+        if my_data is not None:
 
             provider_es = es.index(index='providers', body={
                 'firstname': my_data['firstname'],
@@ -22,6 +26,7 @@ class ProviderAPIView(APIView):
                 'phone_number': my_data['phone_number'],
                 'languages_spoken': my_data['languages_spoken'],
                 'rating': my_data['rating'],
+                'num_of_ratings': my_data['num_of_ratings'],
                 'residence_street': my_data['residence_street'],
                 'residence_zip': my_data['residence_zip'],
                 'residence_city': my_data['residence_city'],
@@ -37,11 +42,12 @@ class ProviderAPIView(APIView):
         provider = es.get(index='providers', id=provider_id)
 
         serializer = ProviderSerializer(data=provider['_source'])
-        if serializer.is_valid():
+        # if serializer.is_valid():
+        if provider is not None:
             return Response(provider, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, id, format=None):
+    def put(self, request, format=None):
         provider_id = request.query_params.get('id', None)
 
         my_data = request.data
@@ -55,6 +61,7 @@ class ProviderAPIView(APIView):
                 'phone_number': my_data['phone_number'],
                 'languages_spoken': my_data['languages_spoken'],
                 'rating': my_data['rating'],
+                'num_of_ratings': my_data['num_of_ratings'],
                 'residence_street': my_data['residence_street'],
                 'residence_zip': my_data['residence_zip'],
                 'residence_city': my_data['residence_city'],

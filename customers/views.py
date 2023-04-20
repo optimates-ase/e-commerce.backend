@@ -12,7 +12,8 @@ class CustomerAPIView(APIView):
     def post(self, request, format=None):
         serializer = CustomerSerializer(data=request.data)
         my_data = request.data
-        if serializer.is_valid():
+        # if serializer.is_valid():
+        if my_data is not None:
 
             customer_es = es.index(index='customers', body={
                 'firstname': my_data['firstname'],
@@ -39,11 +40,12 @@ class CustomerAPIView(APIView):
         customer = es.get(index='customers', id=customer_id)
 
         serializer = CustomerSerializer(data=customer['_source'])
-        if serializer.is_valid():
+        # if serializer.is_valid():
+        if customer is not None:
             return Response(customer, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, id, format=None):
+    def put(self, request, format=None):
         customer_id = request.query_params.get('id', None)
 
         my_data = request.data

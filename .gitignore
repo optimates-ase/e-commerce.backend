@@ -38,4 +38,4 @@ tmp_email/
 .tool-versions
 
 # elasticsearch
-elasticsearch/data/nodes
+elasticsearch-infra/elasticsearch/data/nodes/*
