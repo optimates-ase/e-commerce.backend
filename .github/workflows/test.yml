@@ -4,9 +4,9 @@ jobs:
   test-api:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v1
       - name: Setup Python 3.11.2
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v3
         with:
           python-version: 3.11.2
       - name: Install Pipenv
