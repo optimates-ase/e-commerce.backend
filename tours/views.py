@@ -12,7 +12,7 @@ from .serializers import TourSerializer, ContactSerializer
 from elasticsearch import Elasticsearch
 import random
 
-es = Elasticsearch()
+es = Elasticsearch("http://elasticsearch:9200")
 
 
 class ContactAPIView(views.APIView):
