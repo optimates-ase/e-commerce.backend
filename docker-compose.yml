@@ -10,10 +10,9 @@ services:
       - es-net
     ports:
       - 9200:9200
-      - 9300:9300
     mem_limit: 2048m
     volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
+      - es_data:/usr/share/elasticsearch/data
 
   api:
     container_name: api-container
@@ -39,7 +38,7 @@ services:
     container_name: kb-container
     image: docker.elastic.co/kibana/kibana:7.11.0
     environment:
-      - ELASTICSEARCH_HOSTS=http://es-container:9200
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     networks:
       - es-net
     depends_on:
@@ -56,9 +55,5 @@ networks:
     driver: bridge
 
 volumes:
-  elasticsearch_data:
+  es_data:
     driver: local
-    driver_opts:
-      type: none
-      device: ./elasticsearch-infra/elasticsearch/data/
-      o: bind

@@ -4,7 +4,7 @@ from rest_framework import status
 from elasticsearch import Elasticsearch
 from customers.serializers import CustomerSerializer
 
-es = Elasticsearch()
+es = Elasticsearch("http://elasticsearch:9200")
 
 
 class CustomerAPIView(APIView):

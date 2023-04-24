@@ -25,7 +25,7 @@ router = routers.DefaultRouter()
 urlpatterns = router.urls
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     # path("store/", include("store.urls")),
     path("contact/", tour_views.ContactAPIView.as_view()),
     path('districts/', include("districts.urls")),

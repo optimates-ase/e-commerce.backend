@@ -4,7 +4,7 @@ from rest_framework import status
 from .models import Geo
 from elasticsearch import Elasticsearch
 
-es = Elasticsearch()
+es = Elasticsearch("http://elasticsearch:9200")
 
 # Create your views here.
 
