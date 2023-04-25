@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'tours',
     'geos',
     'customers',
-    'providers'
+    'providers',
+    'weather'
 ]
 
 APPEND_SLASH = False
