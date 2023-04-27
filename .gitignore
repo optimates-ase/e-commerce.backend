@@ -39,6 +39,7 @@ tmp_email/
 
 # elasticsearch
 elasticsearch-infra/elasticsearch/data/nodes/*
+es_data/*
 
 # 
 db.sqlite3
