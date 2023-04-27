@@ -54,110 +54,90 @@ class ContactAPIView(views.APIView):
 
 
 class RandomToursAPIView(APIView):
-    def __init__(self):
-        self.displayed_tour_ids = set()
+    def get(self, request):
+        page = int(request.query_params.get("page", 1))
+        page_size = int(request.query_params.get("page_size", 10))
 
-    def get(self, request, format=None):
-        page = request.query_params.get('page', 1)
-        per_page = request.query_params.get('per_page', 10)
+        start = (page - 1) * page_size
+        end = start + page_size
 
-        start_index = (int(page) - 1) * int(per_page)
-        size = int(per_page)
+        tours = es.search(index="tours", size=10000)
 
-        query = {
-            "query": {
-                "function_score": {
-                    "functions": [
-                        {
-                            "random_score": {}
-                        },
-                        {
-                            "filter": {
-                                "bool": {
-                                    "must_not": [
-                                        {
-                                            "ids": {
-                                                "values": list(self.displayed_tour_ids)
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "weight": 1000  # You can adjust the weight as needed
-                        }
-                    ]
-                }
-            },
-            "from": start_index,
-            "size": size
+        total_count = tours["hits"]["total"]["value"]
+        tours = tours["hits"]["hits"]
+        random.shuffle(tours)
+
+        tours = tours[start:end]
+
+        response = {
+            "page": page,
+            "page_size": page_size,
+            "total_count": total_count,
+            "data": [],
         }
 
-        results = es.search(index='tours', body=query)
+        for tour in tours:
+            tour_data = tour["_source"]
+            tour_data["id"] = tour["_id"]
+            response["data"].append(tour_data)
 
-        # Extract tour data from Elasticsearch response
-        tours = []
-        for hit in results['hits']['hits']:
-            tour_data = hit['_source']
-            tour_data['id'] = hit['_id']
-            tours.append(tour_data)
-
-            # Add displayed tour ID to set
-            self.displayed_tour_ids.add(hit['_id'])
-
-        return JsonResponse({'tours': tours})
+        return Response(response, status=status.HTTP_200_OK)
 
 
 class TourAPIView(APIView):
-
     def post(self, request, format=None):
         serializer = TourSerializer(data=request.data)
         my_data = request.data
         if serializer.is_valid():
-
-            tour_es = es.index(index='tours', body={
-                'name': my_data['name'],
-                'description': my_data['description'],
-                'price': my_data['price'],
-                'date': my_data['date'],
-                'min_of_participants': my_data['min_of_participants'],
-                'rating': my_data['rating'],
-                'num_of_ratings': my_data['num_of_ratings'],
-                'language_offered': my_data['language_offered'],
-            })
+            tour_es = es.index(
+                index="tours",
+                body={
+                    "name": my_data["name"],
+                    "description": my_data["description"],
+                    "price": my_data["price"],
+                    "date": my_data["date"],
+                    "min_of_participants": my_data["min_of_participants"],
+                    "rating": my_data["rating"],
+                    "num_of_ratings": my_data["num_of_ratings"],
+                    "language_offered": my_data["language_offered"],
+                },
+            )
             return Response(tour_es, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, format=None):
-        tour_id = request.query_params.get('id', None)
-        tour = es.get(index='tours', id=tour_id)
+        tour_id = request.query_params.get("id", None)
+        tour = es.get(index="tours", id=tour_id)
 
-        serializer = TourSerializer(data=tour['_source'])
+        serializer = TourSerializer(data=tour["_source"])
         if serializer.is_valid():
             return Response(tour, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, format=None):
-        tour_id = request.query_params.get('id', None)
+        tour_id = request.query_params.get("id", None)
 
         my_data = request.data
 
         if my_data is not None:
-
-            tour_es = es.index(index='tours', id=tour_id, body={
-                'name': my_data['name'],
-                'description': my_data['description'],
-                'price': my_data['price'],
-                'date': my_data['date'],
-                'min_of_participants': my_data['min_of_participants'],
-                'rating': my_data['rating'],
-                'num_of_ratings': my_data['num_of_ratings'],
-                'language_offered': my_data['language_offered'],
-
-            })
+            tour_es = es.index(
+                index="tours",
+                id=tour_id,
+                body={
+                    "name": my_data["name"],
+                    "description": my_data["description"],
+                    "price": my_data["price"],
+                    "date": my_data["date"],
+                    "min_of_participants": my_data["min_of_participants"],
+                    "rating": my_data["rating"],
+                    "num_of_ratings": my_data["num_of_ratings"],
+                    "language_offered": my_data["language_offered"],
+                },
+            )
             return Response(tour_es, status=status.HTTP_201_CREATED)
         return Response(f"bad request: {tour_es}", status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, format=None):
-        tour_id = request.query_params.get('id', None)
-        response = es.delete(index='tours', id=tour_id)
+        tour_id = request.query_params.get("id", None)
+        response = es.delete(index="tours", id=tour_id)
         return Response(response, status=status.HTTP_204_NO_CONTENT)
