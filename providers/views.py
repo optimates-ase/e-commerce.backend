@@ -4,7 +4,7 @@ from rest_framework import status
 from elasticsearch import Elasticsearch
 from providers.serializers import ProviderSerializer
 
-es = Elasticsearch()
+es = Elasticsearch("http://elasticsearch:9200")
 
 
 class ProviderAPIView(APIView):
