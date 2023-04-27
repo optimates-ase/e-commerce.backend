@@ -19,6 +19,7 @@ services:
     build:
       dockerfile: ./docker/Dockerfile
       context: ./
+    mem_limit: 2000m
     restart: unless-stopped
     command: python manage.py runserver 0.0.0.0:8000
     # TODO remove volumes, as it does not honor .dockerignore.
