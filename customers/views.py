@@ -43,13 +43,31 @@ class CustomerAPIView(APIView):
 
     def get(self, request, format=None):
         customer_id = request.query_params.get("id", None)
-        customer = es.get(index="customers", id=customer_id)
+        customer_email = request.query_params.get("email", None)
 
-        serializer = CustomerSerializer(data=customer["_source"])
-        # if serializer.is_valid():
+        customer = None
+        try:
+            if customer_id:
+                customer = es.get(index="customers", id=customer_id)
+            elif customer_email:
+                res = es.search(index='customers', body={
+                    "query": {
+                        "match": {
+                        "email_address": customer_email
+                        }
+                    }
+                })
+                if len(res['hits']['hits']) == 0:   
+                    return Response("Not found", status=status.HTTP_404_NOT_FOUND)
+                else:
+                    customer = res['hits']['hits'][0]
+
+        except Exception as e:
+            return Response(f"Bad request {e}", status=status.HTTP_400_BAD_REQUEST)
+        
         if customer is not None:
             return Response(customer, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(f"Bad request {e}", status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, format=None):
         customer_id = request.query_params.get("id", None)
