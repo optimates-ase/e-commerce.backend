@@ -11,3 +11,4 @@ pytest*
 *.md
 setup.cfg
 es_data
+cache

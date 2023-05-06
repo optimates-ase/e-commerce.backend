@@ -19,4 +19,3 @@ RUN set -e; \
 # Run the application
 EXPOSE 8000
 ENTRYPOINT ["/code/docker/entrypoints/entrypoint.sh"]
-
