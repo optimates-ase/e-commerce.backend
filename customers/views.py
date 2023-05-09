@@ -15,30 +15,33 @@ class CustomerAPIView(APIView):
         my_data = request.data
         # if serializer.is_valid():
         if my_data is not None:
+            customer = {
+                "firstname": my_data.get("firstname", ""),
+                "lastname": my_data.get("lastname", ""),
+                "birthdate": my_data.get("birthdate", ""),
+                "email_address": my_data.get("email_address", ""),
+                "phone_number": my_data.get("phone_number", ""),
+                "billing_street": my_data.get("billing_street", ""),
+                "billing_zip": my_data.get("billing_zip", ""),
+                "billing_city": my_data.get("billing_city", ""),
+                "billing_country": my_data.get("billing_country", ""),
+                "residence_street": my_data.get("residence_street", ""),
+                "residence_zip": my_data.get("residence_zip", ""),
+                "residence_city": my_data.get("residence_city", ""),
+                "residence_country": my_data.get("residence_country", ""),
+                "access_token": my_data.get("access_token", ""),
+                "refresh_token": my_data.get("refresh_token", ""),
+                "marked_tours": [],
+                "booked_tours": [],
+            }
+
             customer_es = es.index(
                 index="customers",
-                body={
-                    "firstname": my_data["firstname"],
-                    "lastname": my_data["lastname"],
-                    "birthdate": my_data["birthdate"],
-                    "email_address": my_data["email_address"],
-                    "phone_number": my_data["phone_number"],
-                    "billing_street": my_data["billing_street"],
-                    "billing_zip": my_data["billing_zip"],
-                    "billing_city": my_data["billing_city"],
-                    "billing_country": my_data["billing_country"],
-                    "residence_street": my_data["residence_street"],
-                    "residence_zip": my_data["residence_zip"],
-                    "residence_city": my_data["residence_city"],
-                    "residence_country": my_data["residence_country"],
-                    "access_token": my_data["access_token"],
-                    "refresh_token": my_data["refresh_token"],
-                    "marked_tours": [],
-                    "booked_tours": [],
-                },
+                body=customer,
             )
 
             return Response(customer_es, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, format=None):
@@ -50,21 +53,18 @@ class CustomerAPIView(APIView):
             if customer_id:
                 customer = es.get(index="customers", id=customer_id)
             elif customer_email:
-                res = es.search(index='customers', body={
-                    "query": {
-                        "match": {
-                        "email_address": customer_email
-                        }
-                    }
-                })
-                if len(res['hits']['hits']) == 0:   
+                res = es.search(
+                    index="customers",
+                    body={"query": {"match": {"email_address": customer_email}}},
+                )
+                if len(res["hits"]["hits"]) == 0:
                     return Response("Not found", status=status.HTTP_404_NOT_FOUND)
                 else:
-                    customer = res['hits']['hits'][0]
+                    customer = res["hits"]["hits"][0]
 
         except Exception as e:
             return Response(f"Bad request {e}", status=status.HTTP_400_BAD_REQUEST)
-        
+
         if customer is not None:
             return Response(customer, status=status.HTTP_200_OK)
         return Response(f"Bad request {e}", status=status.HTTP_400_BAD_REQUEST)
@@ -75,26 +75,42 @@ class CustomerAPIView(APIView):
         my_data = request.data
 
         if my_data is not None:
+            body = {}
+            if my_data.get("firstname") is not None:
+                body["firstname"] = my_data["firstname"]
+            if my_data.get("lastname") is not None:
+                body["lastname"] = my_data["lastname"]
+            if my_data.get("birthdate") is not None:
+                body["birthdate"] = my_data["birthdate"]
+            if my_data.get("email_address") is not None:
+                body["email_address"] = my_data["email_address"]
+            if my_data.get("phone_number") is not None:
+                body["phone_number"] = my_data["phone_number"]
+            if my_data.get("billing_street") is not None:
+                body["billing_street"] = my_data["billing_street"]
+            if my_data.get("billing_zip") is not None:
+                body["billing_zip"] = my_data["billing_zip"]
+            if my_data.get("billing_city") is not None:
+                body["billing_city"] = my_data["billing_city"]
+            if my_data.get("billing_country") is not None:
+                body["billing_country"] = my_data["billing_country"]
+            if my_data.get("residence_street") is not None:
+                body["residence_street"] = my_data["residence_street"]
+            if my_data.get("residence_zip") is not None:
+                body["residence_zip"] = my_data["residence_zip"]
+            if my_data.get("residence_city") is not None:
+                body["residence_city"] = my_data["residence_city"]
+            if my_data.get("residence_country") is not None:
+                body["residence_country"] = my_data["residence_country"]
+            if my_data.get("access_token") is not None:
+                body["access_token"] = my_data["access_token"]
+            if my_data.get("refresh_token") is not None:
+                body["refresh_token"] = my_data["refresh_token"]
+
             customer_es = es.index(
                 index="customers",
                 id=customer_id,
-                body={
-                    "firstname": my_data["firstname"],
-                    "lastname": my_data["lastname"],
-                    "birthdate": my_data["birthdate"],
-                    "email_address": my_data["email_address"],
-                    "phone_number": my_data["phone_number"],
-                    "billing_street": my_data["billing_street"],
-                    "billing_zip": my_data["billing_zip"],
-                    "billing_city": my_data["billing_city"],
-                    "billing_country": my_data["billing_country"],
-                    "residence_street": my_data["residence_street"],
-                    "residence_zip": my_data["residence_zip"],
-                    "residence_city": my_data["residence_city"],
-                    "residence_country": my_data["residence_country"],
-                    "access_token": my_data["access_token"],
-                    "refresh_token": my_data["refresh_token"],
-                },
+                body=body,
             )
             return Response(customer_es, status=status.HTTP_201_CREATED)
         return Response(

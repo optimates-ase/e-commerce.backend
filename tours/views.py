@@ -89,18 +89,19 @@ class TourAPIView(APIView):
         serializer = TourSerializer(data=request.data)
         my_data = request.data
         if serializer.is_valid():
+            body = {
+                "name": my_data.get("name", None),
+                "description": my_data.get("description", None),
+                "price": my_data.get("price", None),
+                "date": my_data.get("date", None),
+                "min_of_participants": my_data.get("min_of_participants", None),
+                "rating": None,
+                "num_of_ratings": 0,
+                "language_offered": my_data.get("language_offered", None),
+            }
             tour_es = es.index(
                 index="tours",
-                body={
-                    "name": my_data["name"],
-                    "description": my_data["description"],
-                    "price": my_data["price"],
-                    "date": my_data["date"],
-                    "min_of_participants": my_data["min_of_participants"],
-                    "rating": my_data["rating"],
-                    "num_of_ratings": my_data["num_of_ratings"],
-                    "language_offered": my_data["language_offered"],
-                },
+                body=body,
             )
             return Response(tour_es, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -120,19 +121,25 @@ class TourAPIView(APIView):
         my_data = request.data
 
         if my_data is not None:
+            body = {}
+
+            if my_data.get("name") is not None:
+                body["name"] = my_data["name"]
+            if my_data.get("description") is not None:
+                body["description"] = my_data["description"]
+            if my_data.get("price") is not None:
+                body["price"] = my_data["price"]
+            if my_data.get("date") is not None:
+                body["date"] = my_data["date"]
+            if my_data.get("min_of_participants") is not None:
+                body["min_of_participants"] = my_data["min_of_participants"]
+            if my_data.get("language_offered") is not None:
+                body["language_offered"] = my_data["language_offered"]
+
             tour_es = es.index(
                 index="tours",
                 id=tour_id,
-                body={
-                    "name": my_data["name"],
-                    "description": my_data["description"],
-                    "price": my_data["price"],
-                    "date": my_data["date"],
-                    "min_of_participants": my_data["min_of_participants"],
-                    "rating": my_data["rating"],
-                    "num_of_ratings": my_data["num_of_ratings"],
-                    "language_offered": my_data["language_offered"],
-                },
+                body=body,
             )
             return Response(tour_es, status=status.HTTP_201_CREATED)
         return Response(f"bad request: {tour_es}", status=status.HTTP_400_BAD_REQUEST)
@@ -141,3 +148,36 @@ class TourAPIView(APIView):
         tour_id = request.query_params.get("id", None)
         response = es.delete(index="tours", id=tour_id)
         return Response(response, status=status.HTTP_204_NO_CONTENT)
+
+
+class TourRatingAPIView(APIView):
+    def post(self, request):
+        tour_id = request.query_params.get("id", None)
+        if not tour_id:
+            return Response(
+                {"message": "Tour ID is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            tour = es.get(index="tours", id=tour_id)
+        except:
+            return Response(
+                {"message": "Tour not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        rating = request.query_params.get("rating")
+
+        current_num_of_ratings = tour["_source"]["num_of_ratings"]
+        current_rating = tour["_source"]["rating"]
+        new_num_of_ratings = current_num_of_ratings + 1
+        new_rating = (
+            current_rating * current_num_of_ratings + float(rating)
+        ) / new_num_of_ratings
+
+        es.update(
+            index="tours",
+            id=tour_id,
+            body={"doc": {"rating": new_rating, "num_of_ratings": new_num_of_ratings}},
+        )
+        return Response(
+            {"message": "Tour rated successfully"}, status=status.HTTP_201_CREATED
+        )
