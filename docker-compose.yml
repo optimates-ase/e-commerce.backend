@@ -49,17 +49,27 @@ services:
         soft: -1
         hard: -1
 
-  redis-db:
-    container_name: redis_db
-    image: redis:latest
-    restart: always
-    command: redis-server --save 20 1 --loglevel warning
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_PORT=27017
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    ports:
+      - 8081:8081
     networks:
       - es-net
-    ports:
-      - 6379:6379
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
     volumes:
-      - cache:/data
+      - mongo_data:/data/db
+    networks:
+      - es-net
 
 networks:
   es-net:
@@ -69,4 +79,6 @@ volumes:
   es_data:
     driver: local
   cache:
+    driver: local
+  mongo_data:
     driver: local
