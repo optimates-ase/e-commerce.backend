@@ -36,3 +36,11 @@ tmp_email/
 .direnv
 .envrc
 .tool-versions
+
+# elasticsearch
+elasticsearch-infra/elasticsearch/data/nodes/*
+es_data
+cache
+
+# 
+db.sqlite3

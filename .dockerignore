@@ -1,0 +1,14 @@
+.coveragerc
+.editorconfig
+.gitignore
+.git
+.github
+.vscode
+.pytest_cache
+Pipfile
+Pipfile.lock
+pytest*
+*.md
+setup.cfg
+es_data
+cache
