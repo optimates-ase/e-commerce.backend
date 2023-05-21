@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'geos',
     'customers',
     'providers',
-    'weather'
+    'weather',
+    'images'
 ]
 
 APPEND_SLASH = False

@@ -34,5 +34,6 @@ urlpatterns = [
     path('customers/', include("customers.urls")),
     path('providers/', include("providers.urls")),
     path('weather/', include("weather.urls")),
+    path('images/', include("images.urls")),
     # path('__debug__/', include('debug_toolbar.urls'))
 ]
